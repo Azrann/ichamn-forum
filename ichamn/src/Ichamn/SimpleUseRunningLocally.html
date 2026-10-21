@@ -1,0 +1,43 @@
+<html>
+<head>
+	<script type="text/javascript" src="Scripts/jquery.js"></script>
+	<script type="text/javascript" src="Scripts/jquery.tmpl.js"></script>
+    <script type="text/javascript" src="Scripts/Gembed.js" ></script>
+	<script type="text/javascript" src="Scripts/GembedProviders.js" ></script>
+</head>
+	
+<body>
+<div id="myTextToEmbed">
+	Hey guys here is a couple of links
+	<br/>	<br/>
+	http://google.es
+	<br/>	<br/>
+	http://www.youtube.com/watch?v=A-wbGqQVU8E
+	<br/>	<br/>
+	http://farm3.static.flickr.com/2033/2426941443_9f647112e0.jpg
+	<br/>		<br/>
+	http://i.telegraph.co.uk/multimedia/archive/01111/AC_0000703_D_1111384i.jpg
+	<br/>		<br/>
+	http://www.mindyjohnston.com/trottier/photos/landscapes/5.jpg
+</div>
+
+  <script>
+    $(document).ready(function () {
+		initialize();
+		$('#myTextToEmbed').html(getEmbedText($('#myTextToEmbed').html()));
+	});
+  </script>
+  <script id="imageTemplate" type="text/x-jquery-tmpl">
+	<img src='${url}'/>
+</script>
+
+<script id="linkTemplate" type="text/x-jquery-tmpl">
+	<a href='${url}'>${url}</a>
+</script>
+
+<script id="youtubeTemplate" type="text/x-jquery-tmpl">
+	<iframe width="560" height="315" src="http://www.youtube.com/embed/${v}" frameborder="0" allowfullscreen></iframe>
+</script>
+</body>
+
+</html>

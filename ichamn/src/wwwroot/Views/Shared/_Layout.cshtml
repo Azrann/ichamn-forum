@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap-responsive.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/jquery.dialog2.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jQuery.tmpl.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.cookie.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.dialog2.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Gembed.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/GembedProviders.js")" type="text/javascript"></script>
+
+</head>
+<body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="#">
+                        iChamn! (Alpha)
+                    </a>
+                </div>
+            </div>
+        </div>
+    <div id="formTopRight" class="well form-inline small-padding navbar-fixed-top">
+        <i class="icon-user"></i>
+        Username: 
+        <input id="username" type="text" class="input-small"/>
+        <span id="usernameLabel" class="hidden input-small"></span>
+        <button class="btn" onclick="oPage.SetUsername();$(this).hide();return false;">
+            <i class="icon-ok"></i>
+            Set
+        </button>
+    </div>
+
+    <div id="main" >
+        @RenderBody()
+    </div>
+    
+    <hr/>
+    <footer>
+        <p>&copy; iCham 2012</p>
+    </footer>
+</body>
+</html>

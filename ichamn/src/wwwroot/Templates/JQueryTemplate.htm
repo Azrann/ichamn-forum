@@ -1,0 +1,30 @@
+<script id="forumTemplate" type="text/html">
+    <div class="Topic">
+        <div class="Title">
+            <a href="#" alt="${Author}"><i class="icon-user"></i></a><span class="label label-info">${Cdate}</span><span class="TitleSpan">${Title}</span><button id="ver${Id}" type="button" class="btn-mini btn btn-inverse" onclick="oPage.AddSubscription('${Id}')"><i class="icon-zoom-in icon-white"></i></button>
+        </div>
+    </div>
+</script>
+<script id="messageTemplate" type="text/html">
+    <div class="MessageElement">
+        <div class="Info"><span class="label label-info top-left">${Username}</span><span class="label label-inverse top-right">${Cdate}</span></div>
+        <div class="message-text">{{html Message}}</div>
+    </div>
+</script>
+<script id="TopicTemplate" type="text/html">
+    <div id="${officeId}" class="TopicMain well no-padding">
+        <div class="Title small-padding"><i class="icon-align-justify icon-white"></i> ${title} 
+            <button class="btn btn-mini" onclick="oPage.RemoveSubscription('${officeId}');"><i class="icon-remove"></i></button>
+        </div>
+        <div id="content${officeId}" class="Content"></div>
+        <div class="Response small-padding">    
+            <div><textarea id="input${officeId}" rows="3" class=""></textarea></div>
+            <button type="button" class="btn btn-small btn btn-primary" onclick="oPage.SendMessageButton('${officeId}');"><i class="icon-comment icon-white"></i> Enviar</button></div>
+    </div>
+</script>
+<script id="AlertTemplate" type="text/html">
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert">×</a>
+        <b>Error: </b>${errorMsg}
+    </div>
+</script>

@@ -1,0 +1,438 @@
+@{
+    ViewBag.Title = "Enjoy it!";
+}
+<div id="templateDiv"></div> 
+<div id="topSpace"></div>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div  id="leftMenu" class="span4">
+            <div class="well no-padding">
+                <div id="leftMenuHeader" class="small-padding">
+                    <i class="icon-list-alt icon-white"></i>
+                    <div class="inline">Temas</div>
+                    <button class="btn btn-mini" onclick=" oPage.CreateTopicBtn(); "><i class="icon-plus"></i></button>
+                </div>
+                <div id="topicPanel">
+                    <b>Titulo</b> <input id="topicTitle" maxlength="85" class="input-xxlarge" type="text"/> 
+                    <textarea rows="9" id="topicMsg" class="input-xxlarge" onfocus="if (this.value == 'Tu mensaje aqui...'){this.value = ''}">Tu mensaje aqui...</textarea>
+                    <div class=""></div>
+                </div>
+                <div id="topicList"></div>
+            </div>
+        </div>
+        <div id="mainMenu" class="span7 no-padding">
+            <div id="topicWindowsPanel">
+            </div>
+            <div id="messagePanel"></div>
+        </div>
+    </div>
+</div>
+<div id="bottomAlertPanel"></div>
+<script type="text/javascript">
+    /* Main Controller objects*/
+    var oForum;
+    var oPage;
+    var oDataProcessor;
+
+    var pathname;
+    var sessionId = "@ViewBag.SessionId";
+    var username = "REPLACE_WITH_YOUR_VALUE";
+    /*Timeout variables*/
+    var GetInfoTimeOut;
+    var messageTimeOut;
+
+    function Topic(pSecuenceNumber, pAutor, pTitle, pId, pDate) {
+        this.autor = pAutor;
+        this.title = pTitle;
+        this.secuence = pSecuenceNumber;
+        this.version = 0;
+        this.id = pId;
+        this.cDate = pDate;
+        this.oMessages = new Array();
+
+        this.Add = function(paramSecuenceNumber, paramAutor, paramMessage, paramDate) {
+            var tempMessage = new Message(paramSecuenceNumber, paramAutor, paramMessage, paramDate);
+            this.oMessages[paramSecuenceNumber] = tempMessage;
+            if (this.version <= paramSecuenceNumber) {
+                this.version = paramSecuenceNumber + 1;
+            }
+        };
+
+        this.GetMessagesJS = function() {
+            var list = this.oMessages;
+            if (list && (list.length > 0)) {
+                $("#messageTemplate").tmpl(list).appendTo("#content" + this.id.toString());
+            }
+        };
+    }
+
+    function Message(pSecuenceNumber, pAutor, pMessage, pDate) {
+        this.Username = pAutor;
+        this.Message = pMessage;
+        this.id = pSecuenceNumber;
+        this.Cdate = pDate;
+    }
+
+    function ForumController() {
+        this.version = 0;
+        this.oTopics = new Array();
+        this.oCurrentTopic = null;
+
+        this.AddTopic = function(paramSecuenceNumber, paramAutor, paramTitle, paramId, paramDate) {
+            var tempTopic = new Topic(paramSecuenceNumber, paramAutor, paramTitle, paramId, paramDate);
+            this.oTopics[paramSecuenceNumber] = tempTopic;
+            if (this.version <= paramSecuenceNumber) {
+                this.version = paramSecuenceNumber + 1;
+            }
+        };
+
+        this.GetTopicById = function(topicId) {
+            for (var i = 0; i < this.oTopics.length; i++) {
+                if (this.oTopics[i].id == topicId) {
+                    return this.oTopics[i];
+                }
+            }
+            return null;
+        };
+
+        this.SendTopic = function(author, title, message) {
+            var url = pathname + "/Forum/SendTopic/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { "author": author, "title": title, "message": message },
+                success: this.ShowResult,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                },
+                statusCode: {
+                    407: function() {
+                        $.ajaxSetup({ dataType: "jsonp" });
+                        // Now all AJAX requests use JSONP, retry.
+                        oPage.AddAlert('Navigating behind a proxy generated an error, Topic couldn´t  be sent. Configuration changed');
+                    }
+                }
+            });
+        };
+
+        this.SendMessageToTopic = function(forumId, author, message) {
+            var url = pathname + "/Forum/SendMessage/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { "topicId": forumId, "author": author, "message": message },
+                success: this.ShowResult,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                },
+                statusCode: {
+                    407: function() {
+                        $.ajaxSetup({ dataType: "jsonp" });
+                        // Now all AJAX requests use JSONP, retry.
+                        oPage.AddAlert('Navigating behind a proxy generated an error, Message couldn´t  be sent. Configuration changed');
+                    }
+                }
+            });
+        };
+
+        this.ShowResult = function(data) {
+            if (data[0] != "Ok") {
+                oPage.AddAlert(data[0] + ":" + data[1]);
+            }
+        };
+    }
+
+    function DataProcessor() {
+
+        this.UpdatePage = function(officeList) {
+            if (officeList) {
+                for (var i = 0; i < officeList.length; i++) {
+                    this.UpdateOffice(officeList[i]);
+                }
+            }
+        };
+
+        this.UpdateOffice = function(office) {
+            switch (office.type) {
+            case "om":
+                this.UpdateTopic(office);
+                break;
+            case "ot":
+                this.UpdateForum(office);
+                break;
+            default:
+                oPage.AddAlert("ERROR procesing office.type " + office.type);
+            }
+        };
+
+        this.UpdateTopic = function(topic) {
+            if (topic) {
+                var myTopic = oForum.GetTopicById(topic.officeId);
+                for (var i = 0; i < topic.value.length; i++) {
+                    topic.value[i].Message = getEmbedText(topic.value[i].Message);
+                    var message = topic.value[i];
+                    myTopic.Add(message.Secuence, message.Username, message.Message, message.Cdate);
+                }
+                /*aplicar template*/
+                if ($("#content" + topic.officeId.toString()).length != 0) {
+                    $("#messageTemplate").tmpl(topic.value).appendTo("#content" + topic.officeId.toString());
+                }
+            }
+        };
+
+        this.UpdateForum = function(forum) {
+            if (forum) {
+                for (var i = 0; i < forum.value.length; i++) {
+                    var topic = forum.value[i];
+                    oForum.AddTopic(topic.Secuence, topic.Author, topic.Title, topic.Id, topic.Cdate);
+                    /*aplicar template*/
+                    $("#forumTemplate").tmpl(topic).appendTo("#topicList");
+                }
+            }
+        };
+    }
+
+    /** Page Controler *****/
+
+    function PageController() {
+        this.Initialize = function() {
+            $("#username").val(username);
+            $("#topicPanel").dialog2({
+                title: "Crear nuevo Tema",
+                autoOpen: false,
+                closeOnEscape: true,
+                buttons: {
+                    Close: {
+                        primary: false,
+                        click: function() {
+                            $(this).dialog2("close");
+                        }
+                    },
+                    Create: {
+                        primary: true,
+                        click: function() {
+                            if ($("#topicTitle").val().trim(' ') == "") {
+                                $("#AlertTemplate").tmpl({ 'errorMsg': 'El campo titulo es obligatorio' }).appendTo("#topicPanel");
+                                $("#topicTitle").addClass("error").focus();
+                            } else {
+                                oPage.SendTopicButton();
+                                $(this).dialog2("close");
+                            }
+                        },
+                        type: "btn-blue"
+                    }
+                },
+                removeOnClose: false
+            });
+            var url3 = pathname + "/Templates/Select/1";
+            $.ajax({
+                type: "GET",
+                url: url3,
+                success: function(data) { $("#templateDiv").append(data); },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Error cargando las plantillas para videos e imagenes,  el sitio no funcionara correctamente, recomendamos recargar la pagina. Status: ' + xhr.status + ' ' + thrownError);
+                }
+            });
+
+            var url2 = pathname + "/Templates/Select/0";
+            $.ajax({
+                type: "GET",
+                url: url2,
+                success: function(data) { $("#templateDiv").append(data); },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Error cargando las plantillas, el sitio no funcionara correctamente, recomendamos recargar la pagina. Status: ' + xhr.status + ' ' + thrownError);
+                }
+            });
+
+            var url = pathname + "/Forum/AddInitialSubscription/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { "sessionId": sessionId },
+                success: this.ShowResult,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                }
+            });
+
+            if (jQuery.cookie("ichamn") != sessionId) {
+                var urlCleanSession = pathname + "/Forum/CleanSession/";
+                $.ajax({
+                    type: "POST",
+                    url: urlCleanSession,
+                    dataType: "json",
+                    data: { "sessionId": $.cookie("ichamn") },
+                    success: this.ShowResult,
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                    }
+                });
+                jQuery.cookie("ichamn", sessionId, { expires: 7 });
+            }
+        };
+
+        this.AddSubscription = function(id) {
+            var secuence = 0;
+            if ($("#" + id).length > 0) {
+                var oTopic = oForum.GetTopicById(id);
+                secuence = oTopic.version;
+            }
+            var url = pathname + "/Forum/AddSubscription/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { "sessionId": sessionId, "id": id, "secuence": secuence },
+                success: this.AfterAddSubscription,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                },
+                statusCode: {
+                    407: function() {
+                        $.ajaxSetup({ dataType: "jsonp" });
+                        // Now all AJAX requests use JSONP, retry.
+                        oPage.AddAlert('Navigating behind a proxy generated an error, No pudimos agregar subscripcion a ' + id + '. Configuration changed');
+
+                    }
+                }
+            });
+        };
+
+        this.AfterAddSubscription = function(data) {
+            if (data[0] != "Error") {
+                oPage.CreateTopicWindow(data);
+                $("#ver" + data.officeId.toString()).hide();
+            } else {
+                oPage.AddAlert(data[1]);
+            }
+        };
+
+        this.RemoveSubscription = function(id) {
+            var topicDiv = $("#" + id).first();
+            if (topicDiv.length > 0) {
+                $(topicDiv).hide(0.5);
+            }
+            var url = pathname + "/Forum/RemoveSubscription/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { "sessionId": sessionId, "id": id },
+                success: this.AfterRemoveSubscription,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                }
+            });
+        };
+
+        this.AfterRemoveSubscription = function(data) {
+            if (data[0] == "Error") {
+                oPage.AddAlert(data[1]);
+                return;
+            }
+            $("#ver" + data.officeId.toString()).show();
+        };
+
+        this.ProcessResponse = function(data) {
+            if (data[0] && data[0] != "") {
+                if (data[0] == "Error") {
+                    oPage.AddAlert(data[1]);
+                    return;
+                }
+                var jsonData = jQuery.parseJSON(data[0]);
+                oDataProcessor.UpdatePage(jsonData);
+            }
+            clearTimeout(GetInfoTimeOut);
+            GetInfoTimeOut = setTimeout("oPage.GetInformation();", 100);
+        };
+
+        this.GetInformation = function() {
+            if (jQuery.cookie("ichamn") != sessionId) {
+                oPage.AddAlert('You have other active session');
+                window.close();
+                return;
+            }
+            var url = pathname + "/AForum/GetInformation/";
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: { "sessionId": sessionId },
+                success: this.ProcessResponse,
+                error: function(xhr, ajaxOptions, thrownError) {
+                    oPage.AddAlert('Status: ' + xhr.status + ' ' + thrownError);
+                },
+                statusCode: {
+                    407: function() {
+                        $.ajaxSetup({ dataType: "jsonp" });
+                        // Now all AJAX requests use JSONP, retry.
+                        oPage.AddAlert('Navigating behind a proxy generated an error, Estamos tratando de obtener de nuevo la informacion');
+                        oPage.GetInformation();
+                    }
+                }
+            });
+        };
+
+        this.SendTopicButton = function() {
+            var author = oPage.GetUsername();
+            var title = $("#topicTitle").val();
+            var message = $("#topicMsg").val().replace( /(\r\n)|(\n)/g , "<br/>");
+            oForum.SendTopic(author, title, message);
+            $("#topicTitle").val("").focus();
+        };
+
+        this.SendMessageButton = function(forumId) {
+            var selector = '#input' + forumId;
+            var message = $(selector).val().replace( /(\r\n)|(\n)/g , "<br/>");
+            var author = oPage.GetUsername();
+            oForum.SendMessageToTopic(forumId, author, message);
+            $(selector).val("").focus();
+        };
+
+        this.CreateTopicWindow = function(data) {
+            var topicWindow = $("#" + data.officeId);
+            if (topicWindow.length > 0) {
+                topicWindow.show(0.5);
+            } else {
+                $("#TopicTemplate").tmpl(data).appendTo("#messagePanel");
+                var myTopic = oForum.GetTopicById(data.officeId.toString());
+                myTopic.GetMessagesJS();
+            }
+        };
+
+        this.GetUsername = function() {
+            return $("#username").val();
+        };
+
+        this.SetUsername = function() {
+            var uName = $('#username').hide();
+            $('#usernameLabel').text(uName.val()).removeClass("hidden").addClass("uneditable-input");
+        };
+
+        this.CreateTopicBtn = function() {
+            $("#topicPanel").dialog2('open');
+            $("#topicTitle:first").focus();
+        };
+
+        this.AddAlert = function(errorMsg) {
+            var oerror = { 'errorMsg': errorMsg };
+            $("#AlertTemplate").tmpl(oerror).appendTo("#bottomAlertPanel");
+        };
+    }
+
+    oForum = new ForumController();
+    oPage = new PageController();
+    oDataProcessor = new DataProcessor();
+
+    $(document).ready(function() {
+        pathname = window.location.href;
+        /*Gembed Initialize*/
+        initialize();
+        /*Page ini*/
+        oPage.Initialize();
+        GetInfoTimeOut = setTimeout("oPage.GetInformation();", 50);
+    });
+</script>

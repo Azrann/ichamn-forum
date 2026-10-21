@@ -1,0 +1,138 @@
+#formTopRight.navbar-fixed-top {
+    left: auto;
+    z-index: 1031;
+}
+
+#topSpace {
+    height: 70px;
+    display: block;
+}
+
+#bottomAlertPanel {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    padding: 1px;
+}
+
+#bottomAlertPanel .alert {
+    margin-bottom: 1px;
+}
+/* Left menu header */
+#leftMenuHeader 
+{
+    font-weight: bold;
+    line-height: 27px;
+    color: whitesmoke;
+    margin-bottom: 5px;
+    background-color: #2C2C2C;
+    border-radius: 4px 4px 0px 0px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    position: relative;
+}
+
+#leftMenuHeader .btn {
+    position: absolute;
+    right: 5px;
+}
+
+.Topic
+{ 
+    position: relative;
+    border-bottom: 1px solid #2C2C2C;
+    padding: 5px;
+    overflow-x: hidden;
+}
+
+.TitleSpan {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.Title button{ float: right;}
+
+/* Right main menu */
+
+.TopicMain .Title {
+    color: whitesmoke;
+    background-color: #2C2C2C;
+    border-radius: 4px 4px 0px 0px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    font-weight: bold;
+    line-height: 27px;
+    position: relative;
+}
+
+.Content {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.Info {
+    position: relative;
+    height: 14px;
+    display: block;
+}
+.MessageElement {
+    border-bottom: 1px solid #2C2C2C;
+}
+
+.MessageElement div {
+    padding: 5px;
+}
+
+.Response {
+    position: relative;
+}
+.Response div {
+    margin: 5px;
+    position: relative;
+    display: block;
+}
+.Response textarea {
+    width: 100%;
+}
+
+.top-left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.top-right {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.well {
+    border: 1px solid black;
+}
+.well.no-padding {
+    padding: 0px;
+}
+
+.well.small-padding {
+    padding: 10px;
+}
+
+.well.medium-padding {
+    padding: 20px;
+}
+
+.small-padding {
+    padding: 5px;
+}
+
+.medium-padding {
+    padding: 20px;
+}
+
+.inline {
+    display: inline-block;
+}
+
+input.error, textarea.error {
+    border-color: #B94A48;
+    color: #B94A48;
+}
