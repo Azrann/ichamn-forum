@@ -1,27 +1,29 @@
+**Languages:** [English](README.md) · [Español](README.es.md)
+
 # ichamn-forum
 
-Foro web histórico Ichamn.
+Historical Ichamn web forum.
 
 <!-- BEGIN project-context -->
 
-## Antigüedad y evidencia
+## Historical dates and evidence
 
-**Año de referencia de esta versión: 2014.** Se toma el archivo de código o configuración más reciente con una fecha histórica recuperable; no se ha podido confirmar la fecha exacta de creación.
+**Reference year for this version: 2014.** This uses the most recent source or configuration file with a recoverable historical date; the exact creation date could not be confirmed.
 
-- Archivo más reciente datable: **2014-10-05**, [`ichamn/src/Ichamn/Ichamn.csproj`](ichamn/src/Ichamn/Ichamn.csproj); fecha del commit que modificó el archivo, recuperada del Git local.
-- Primer registro del repositorio Git original que contiene este código: **2014-10-05**. Puede corresponder a una importación; no prueba cuándo se escribió por primera vez.
-- Dependencia fechada más reciente entre las comprobadas: [Twitter.Bootstrap 2.0.1](https://www.nuget.org/packages/Twitter.Bootstrap/2.0.1), publicada el **2012-02-17** (versión declarada), en [`ichamn/src/Ichamn/packages.config`](ichamn/src/Ichamn/packages.config).
-- Referencia adicional: destino `v4.0` en [`ichamn/src/Ichamn/Ichamn.csproj`](ichamn/src/Ichamn/Ichamn.csproj); su [versión estable se publicó el 2010-04-12](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-framework). Es una pista de generación tecnológica; pudieron existir versiones preliminares anteriores.
+- Most recent datable file: **2014-10-05**, [`ichamn/src/Ichamn/Ichamn.csproj`](ichamn/src/Ichamn/Ichamn.csproj); date of the commit modifying the file, recovered from local Git history.
+- First record in the original Git repository containing this code: **2014-10-05**. This may be an import and does not establish when the code was first written.
+- Most recently published dependency among those checked: [Twitter.Bootstrap 2.0.1](https://www.nuget.org/packages/Twitter.Bootstrap/2.0.1), published on **2012-02-17** (declared version), in [`ichamn/src/Ichamn/packages.config`](ichamn/src/Ichamn/packages.config).
+- Additional reference: target `v4.0` in [`ichamn/src/Ichamn/Ichamn.csproj`](ichamn/src/Ichamn/Ichamn.csproj); its [stable release was published on 2010-04-12](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-framework). This indicates the technology generation; earlier preview releases may have existed.
 
-La publicación de una dependencia sitúa la configuración conservada a partir de esa versión, si la referencia es válida. Una actualización de paquetes puede ser mucho más reciente que el inicio del proyecto. No se restauraron paquetes para comprobarlo.
+A dependency's publication places the preserved configuration at or after that version, if the reference is valid. Package updates may be much newer than the project's beginnings. Packages were not restored to verify this.
 
-Se descartaron las marcas de tiempo de la copia de octubre de 2026 y los documentos generados durante esta revisión. Las fechas recuperables no garantizan que no existan cambios posteriores sin datar.
+October 2026 copy timestamps and documents generated during this review were excluded. Recoverable dates do not guarantee that there are no later, undated changes.
 
-## Por qué merece la pena mirarlo
+## Why this is worth exploring
 
-Office y Warehouse distribuyen información a sesiones suscritas, mientras un controlador asíncrono entrega las novedades. Esa implementación de colas y suscripciones en memoria es más singular que las pantallas del foro y merece una lectura de su flujo de mensajes.
+Office and Warehouse distribute information to subscribed sessions, while an asynchronous controller delivers updates. This in-memory queue and subscription implementation is more distinctive than the forum screens and is worth exploring through its message flow.
 
-Puntos de entrada al código:
+Code entry points:
 
 - [`src/Ichamn/Models/Office.cs`](ichamn/src/Ichamn/Models/Office.cs)
 - [`src/Ichamn/Models/Warehouse.cs`](ichamn/src/Ichamn/Models/Warehouse.cs)
@@ -29,34 +31,34 @@ Puntos de entrada al código:
 
 <!-- END project-context -->
 
-## Contenido
+## Contents
 
-| Directorio | Función |
+| Directory | Function |
 | --- | --- |
-| [`ichamn/`](ichamn/) | Aplicación web ASP.NET MVC para foros, temas y mensajes, con suscripciones y distribución asíncrona de novedades mediante oficinas y almacenes internos. |
+| [`ichamn/`](ichamn/) | ASP.NET MVC web application for forums, topics, and messages, with subscriptions and asynchronous delivery of updates through internal offices and warehouses. |
 
-Se omiten copias de respaldo, cachés del IDE y resultados de pruebas.
+Backups, IDE caches, and test results are omitted.
 
-## Requisitos y preparación
+## Requirements and setup
 
-.NET Framework, ASP.NET MVC y NuGet.
+.NET Framework, ASP.NET MVC, and NuGet.
 
-Esta es una copia histórica. Consultar los archivos de proyecto y los README de cada componente para sus versiones y dependencias. Restaurar NuGet/npm desde la carpeta correspondiente; las bibliotecas internas pueden necesitar reconstrucción. Preparar las bases de datos y los servicios externos con cuentas propias.
+This is a historical copy. Consult each component's project files and README for versions and dependencies. Restore NuGet/npm from the appropriate folder; internal libraries may need rebuilding. Prepare databases and external services using your own accounts.
 
-Soluciones conservadas:
+Preserved solutions:
 
 - `ichamn/src/Ichamn.sln`
 
-## Configuración y seguridad
+## Configuration and security
 
-Los secretos originales se han eliminado o sustituido por `REPLACE_WITH_YOUR_VALUE`. Buscar este marcador antes de ejecutar y aportar los valores mediante configuración local o variables de entorno. Las sesiones, claves privadas, certificados de firma, bases de datos, registros, perfiles de despliegue y paquetes binarios no se publican. El `.gitignore` protege estos archivos locales.
+Original secrets have been removed or replaced with `REPLACE_WITH_YOUR_VALUE`. Search for this marker before running and provide values through local configuration or environment variables. Sessions, private keys, signing certificates, databases, logs, deployment profiles, and binary packages are not published. The `.gitignore` protects these local files.
 
-Se publica un historial nuevo: los commits antiguos permanecen únicamente en la copia local original. Los valores de ejemplo no permiten conectarse a los servicios originales.
+A fresh history is published: old commits remain only in the original local copy. Example values cannot connect to the original services.
 
-## Estado de validación
+## Validation status
 
-Se realizó una revisión estática y un escaneo de secretos antes de publicar. No se ejecutaron aplicaciones, operaciones de trading, despliegues ni pruebas que contacten servicios externos. No se garantiza la compilación con herramientas actuales. Algunos proyectos necesitan dependencias históricas y activos que no están incluidos.
+A static review and secret scan were performed before publication. Applications, trading operations, deployments, and tests contacting external services were not run. Building with current tools is not guaranteed. Some projects need historical dependencies and assets that are not included.
 
-## Licencias y procedencia
+## Licenses and provenance
 
-Se conservan las licencias y atribuciones de terceros presentes en el código. No se añade una licencia global a los componentes que no la tenían. Esta importación conserva fuentes locales y no afirma ser una versión actual del proyecto original.
+Third-party licenses and attributions present in the code are retained. No blanket license is added to components that lacked one. This import preserves local sources and does not claim to be a current version of the original project.

@@ -1,29 +1,31 @@
+**Languages:** [English](Readme.md) · [Español](README.es.md)
+
 # ichamn
 
-Aplicación web ASP.NET MVC para foros, temas y mensajes, con suscripciones y distribución asíncrona de novedades mediante oficinas y almacenes internos.
+ASP.NET MVC web application for forums, topics, and messages, with subscriptions and asynchronous delivery of updates through internal offices and warehouses.
 
-Documentación basada en los archivos locales revisados el 21 de octubre de 2026.
+Documentation based on local files reviewed on 21 October 2026.
 
 <!-- BEGIN project-context -->
 
-## Antigüedad y evidencia
+## Historical dates and evidence
 
-**Año de referencia de esta versión: 2014.** Se toma el archivo de código o configuración más reciente con una fecha histórica recuperable; no se ha podido confirmar la fecha exacta de creación.
+**Reference year for this version: 2014.** This uses the most recent source or configuration file with a recoverable historical date; the exact creation date could not be confirmed.
 
-- Archivo más reciente datable: **2014-10-05**, [`ichamn/src/Ichamn/Ichamn.csproj`](src/Ichamn/Ichamn.csproj); fecha del commit que modificó el archivo, recuperada del Git local.
-- Primer registro del repositorio Git original que contiene este código: **2014-10-05**. Puede corresponder a una importación; no prueba cuándo se escribió por primera vez.
-- Dependencia fechada más reciente entre las comprobadas: [Twitter.Bootstrap 2.0.1](https://www.nuget.org/packages/Twitter.Bootstrap/2.0.1), publicada el **2012-02-17** (versión declarada), en [`ichamn/src/Ichamn/packages.config`](src/Ichamn/packages.config).
-- Referencia adicional: destino `v4.0` en [`ichamn/src/Ichamn/Ichamn.csproj`](src/Ichamn/Ichamn.csproj); su [versión estable se publicó el 2010-04-12](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-framework). Es una pista de generación tecnológica; pudieron existir versiones preliminares anteriores.
+- Most recent datable file: **2014-10-05**, [`ichamn/src/Ichamn/Ichamn.csproj`](src/Ichamn/Ichamn.csproj); date of the commit modifying the file, recovered from local Git history.
+- First record in the original Git repository containing this code: **2014-10-05**. This may be an import and does not establish when the code was first written.
+- Most recently published dependency among those checked: [Twitter.Bootstrap 2.0.1](https://www.nuget.org/packages/Twitter.Bootstrap/2.0.1), published on **2012-02-17** (declared version), in [`ichamn/src/Ichamn/packages.config`](src/Ichamn/packages.config).
+- Additional reference: target `v4.0` in [`ichamn/src/Ichamn/Ichamn.csproj`](src/Ichamn/Ichamn.csproj); its [stable release was published on 2010-04-12](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-framework). This indicates the technology generation; earlier preview releases may have existed.
 
-La publicación de una dependencia sitúa la configuración conservada a partir de esa versión, si la referencia es válida. Una actualización de paquetes puede ser mucho más reciente que el inicio del proyecto. No se restauraron paquetes para comprobarlo.
+A dependency's publication places the preserved configuration at or after that version, if the reference is valid. Package updates may be much newer than the project's beginnings. Packages were not restored to verify this.
 
-Se descartaron las marcas de tiempo de la copia de octubre de 2026 y los documentos generados durante esta revisión. Las fechas recuperables no garantizan que no existan cambios posteriores sin datar.
+October 2026 copy timestamps and documents generated during this review were excluded. Recoverable dates do not guarantee that there are no later, undated changes.
 
-## Por qué merece la pena mirarlo
+## Why this is worth exploring
 
-Office y Warehouse distribuyen información a sesiones suscritas, mientras un controlador asíncrono entrega las novedades. Esa implementación de colas y suscripciones en memoria es más singular que las pantallas del foro y merece una lectura de su flujo de mensajes.
+Office and Warehouse distribute information to subscribed sessions, while an asynchronous controller delivers updates. This in-memory queue and subscription implementation is more distinctive than the forum screens and is worth exploring through its message flow.
 
-Puntos de entrada al código:
+Code entry points:
 
 - [`src/Ichamn/Models/Office.cs`](src/Ichamn/Models/Office.cs)
 - [`src/Ichamn/Models/Warehouse.cs`](src/Ichamn/Models/Warehouse.cs)
@@ -31,38 +33,38 @@ Puntos de entrada al código:
 
 <!-- END project-context -->
 
-## Estructura y responsabilidades
+## Structure and responsibilities
 
-| Ruta | Responsabilidad |
+| Path | Responsibility |
 | --- | --- |
-| `src/Ichamn/` | Aplicación principal, controladores de foro, cuentas y plantillas. |
-| `src/Ichamn/Models/Office.cs, src/Ichamn/Models/Warehouse.cs` | Modelo de suscriptores y reparto de mensajes/trabajos. |
-| `src/Ichamn.Tests/` | Pruebas del proyecto. |
-| `src/Backup/, src/Backup1/` | Copias antiguas de la aplicación con su propia configuración. |
-| `src/wwwroot/` | Copia de publicación del sitio. |
+| `src/Ichamn/` | Main application, forum and account controllers, and templates. |
+| `src/Ichamn/Models/Office.cs, src/Ichamn/Models/Warehouse.cs` | Subscriber model and message/job distribution. |
+| `src/Ichamn.Tests/` | Project tests. |
+| `src/Backup/, src/Backup1/` | Older application copies with their own configuration. |
+| `src/wwwroot/` | Published website copy. |
 
-## Tecnologías y requisitos
+## Technologies and requirements
 
-Windows, Visual Studio/MSBuild, .NET Framework 4.0, ASP.NET MVC y Entity Framework 4.1; SQL Server y ASP.NET Membership según las configuraciones.
+Windows, Visual Studio/MSBuild, .NET Framework 4.0, ASP.NET MVC, and Entity Framework 4.1; SQL Server and ASP.NET Membership according to configuration.
 
-Destinos leídos de los proyectos: `v4.0`.
+Targets read from project files: `v4.0`.
 
-## Preparación y arranque
+## Setup and startup
 
-Abrir src/Ichamn.sln, restaurar NuGet y configurar la aplicación principal en IIS Express. No tomar las carpetas Backup o wwwroot como fuente principal sin comparar sus versiones.
+Open src/Ichamn.sln, restore NuGet packages, and configure the main application in IIS Express. Do not treat Backup or wwwroot folders as the main source without comparing their versions.
 
-Soluciones presentes: `src/Ichamn.sln`, `src/Backup/Ichamn.sln`, `src/Backup1/Ichamn.sln`.
+Solutions present: `src/Ichamn.sln`, `src/Backup/Ichamn.sln`, `src/Backup1/Ichamn.sln`.
 
-## Configuración e integraciones
+## Configuration and integrations
 
-La conexión ichamn y las bases de Membership aparecen en varias copias. App_Data contiene archivos SQL Server con posibles datos personales.
+The ichamn connection and Membership databases appear in several copies. App_Data contains SQL Server files that may include personal data.
 
-## Estado de esta copia
-
-
-La revisión fue estática: no se restauraron dependencias, no se compiló ni se ejecutaron aplicaciones o pruebas. Los comandos anteriores son instrucciones de preparación, no resultados de validación. Las versiones indicadas son las del código conservado.
+## Status of this copy
 
 
-## Copia pública
+The review was static: dependencies were not restored, and applications and tests were neither built nor run. The commands above are setup instructions, not validation results. Listed versions describe the preserved code.
 
-Las credenciales originales se han retirado o sustituido por `REPLACE_WITH_YOUR_VALUE`. Los datos locales, sesiones, certificados privados y perfiles de despliegue se omiten. Configurar servicios y credenciales propios antes de ejecutar. La compilación y el funcionamiento con servicios externos no se han validado.
+
+## Public copy
+
+Original credentials have been removed or replaced with `REPLACE_WITH_YOUR_VALUE`. Local data, sessions, private certificates, and deployment profiles are omitted. Configure your own services and credentials before running. Building and operation with external services have not been validated.
